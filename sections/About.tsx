@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, ReactNode } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap');
@@ -324,7 +324,7 @@ const pillars = [
 ];
 
 function useFadeIn() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -343,8 +343,14 @@ function useFadeIn() {
   return ref;
 }
 
-function FadeIn({ children, delay = 0, className = "" }) {
-  const ref = useRef(null);
+interface FadeInProps {
+  children?: ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+function FadeIn({ children, delay = 0, className = "" }: FadeInProps) {
+  const ref = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
