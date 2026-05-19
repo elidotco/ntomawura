@@ -350,7 +350,7 @@ interface FadeInProps {
 }
 
 function FadeIn({ children, delay = 0, className = "" }: FadeInProps) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
