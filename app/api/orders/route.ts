@@ -268,7 +268,7 @@ async function sendAdminEmail(order: any) {
         </td>
         <td style="padding:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle;">
           <p style="margin:0 0 4px;font-weight:600;font-size:13px;color:#2c2b27;">${i.name}</p>
-          ${i.variant ? `<p style="margin:0 0 4px;font-size:11px;color:#8a7d64;">${i.variant}</p>` : ""}
+         
           <p style="margin:0;font-size:11px;color:#8a7d64;">Qty: ${i.quantity}</p>
         </td>
         <td style="padding:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle;text-align:right;font-size:13px;color:#2c2b27;white-space:nowrap;">
