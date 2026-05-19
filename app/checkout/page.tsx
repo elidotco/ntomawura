@@ -13,7 +13,13 @@ const WHATSAPP_NUMBER = "233202918388";
  * Builds a WhatsApp message for order TRACKING (not confirmation).
  * The order is already saved — customer just sends this to get updates.
  */
-function buildTrackingMessage(orderNumber, customerName) {
+function buildTrackingMessage({
+  orderNumber,
+  customerName,
+}: {
+  orderNumber: string;
+  customerName: string;
+}) {
   return encodeURIComponent(
     `Hello Ntomawura 👋\n\nI just placed an order on your website and would love to receive updates.\n\n*Order Number:* ${orderNumber}\n*Name:* ${customerName}\n\nKindly confirm receipt and keep me posted on my delivery. Thank you! 🙏`,
   );
