@@ -10,6 +10,7 @@ interface Product {
   comparePrice?: number;
   description?: string;
   stock: number;
+  slug: string;
   inStock: boolean;
   tags?: string[];
   category?: string;
@@ -31,6 +32,7 @@ export default function ProductInfo({ product }: Props) {
       name: product.name,
       price: product.price,
       image: product.images?.[0]?.url ?? "",
+      slug: product.slug,
       quantity: qty,
     });
     setAdded(true);
