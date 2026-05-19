@@ -31,7 +31,7 @@ export default async function ShopPage({ searchParams }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {products.map((product: (typeof products)[number]) => (
               <a href={`/shop/${product.slug}`} key={product._id}>
                 <ProductCard data={product} />
               </a>
