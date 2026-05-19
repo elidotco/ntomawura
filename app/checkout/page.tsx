@@ -6,13 +6,27 @@ import { useRouter } from "next/navigation";
 
 const styles = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Jost:wght@300;400;500&display=swap');`;
 
-// 🔁 Replace with your actual WhatsApp number (no + or spaces)
+type FormValues = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  region: string;
+  deliveryNotes: string;
+};
+
+type FormErrors = Partial<Record<keyof FormValues, string | null>>;
+
+type CompletedOrder = {
+  orderNumber: string;
+  total: number;
+  customerName: string;
+};
+
 const WHATSAPP_NUMBER = "233202918388";
 
-/**
- * Builds a WhatsApp message for order TRACKING (not confirmation).
- * The order is already saved — customer just sends this to get updates.
- */
 function buildTrackingMessage({
   orderNumber,
   customerName,
@@ -25,10 +39,19 @@ function buildTrackingMessage({
   );
 }
 
+type FieldProps = {
+  label: string;
+  k: keyof FormValues;
+  placeholder: string;
+  type?: string;
+  colSpan?: string;
+  textarea?: boolean;
+};
+
 export default function NtomawuraCheckout() {
   const router = useRouter();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormValues>({
     firstName: "",
     lastName: "",
     phone: "",
@@ -38,33 +61,27 @@ export default function NtomawuraCheckout() {
     region: "",
     deliveryNotes: "",
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
-
-  // Completed order data (set after API success)
-  const [completedOrder, setCompletedOrder] = useState<{
-    orderNumber: string;
-    total: number;
-    customerName: string;
-  } | null>(null);
+  const [completedOrder, setCompletedOrder] = useState<CompletedOrder | null>(
+    null,
+  );
 
   const { items: cartItems, clearCart } = useCart() || {};
-
-  // Fallback sample cart for development
-  const cart = cartItems;
+  const cart = cartItems ?? [];
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const total = subtotal;
 
-  const update = (k, v) => {
+  const update = <K extends keyof FormValues>(k: K, v: FormValues[K]) => {
     setForm((f) => ({ ...f, [k]: v }));
     if (errors[k]) setErrors((e) => ({ ...e, [k]: null }));
     if (apiError) setApiError("");
   };
 
-  const validate = () => {
-    const required = [
+  const validate = (): boolean => {
+    const required: (keyof FormValues)[] = [
       "firstName",
       "lastName",
       "phone",
@@ -72,7 +89,7 @@ export default function NtomawuraCheckout() {
       "city",
       "region",
     ];
-    const newErrors = {};
+    const newErrors: FormErrors = {};
     required.forEach((k) => {
       if (!form[k].trim()) newErrors[k] = "Required";
     });
@@ -84,7 +101,6 @@ export default function NtomawuraCheckout() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ── Submit order to API ───────────────────────────────────────────────────
   const handleCheckout = async () => {
     if (!validate()) return;
     setLoading(true);
@@ -96,7 +112,7 @@ export default function NtomawuraCheckout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerName: `${form.firstName} ${form.lastName}`.trim(),
-          customerEmail: form.email || `${form.phone}@noemail.com`, // email optional
+          customerEmail: form.email || `${form.phone}@noemail.com`,
           customerPhone: form.phone,
           deliveryAddress: `${form.address}, ${form.city}, ${form.region}`,
           deliveryNotes: form.deliveryNotes || undefined,
@@ -118,16 +134,17 @@ export default function NtomawuraCheckout() {
           data.error || "Something went wrong. Please try again.",
         );
       }
-      clearCart(); // Clear cart after successful order
+      clearCart?.();
 
-      // Order saved — store result and show success screen
       setCompletedOrder({
         orderNumber: data.orderNumber,
         total: data.total,
         customerName: `${form.firstName} ${form.lastName}`.trim(),
       });
     } catch (err) {
-      setApiError(err.message);
+      setApiError(
+        err instanceof Error ? err.message : "An unexpected error occurred.",
+      );
     } finally {
       setLoading(false);
     }
@@ -135,14 +152,13 @@ export default function NtomawuraCheckout() {
 
   const openWhatsApp = () => {
     if (!completedOrder) return;
-    const msg = buildTrackingMessage(
-      completedOrder.orderNumber,
-      completedOrder.customerName,
-    );
+    const msg = buildTrackingMessage({
+      orderNumber: completedOrder.orderNumber,
+      customerName: completedOrder.customerName,
+    });
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
-  // ── Field component ───────────────────────────────────────────────────────
   const Field = ({
     label,
     k,
@@ -150,7 +166,7 @@ export default function NtomawuraCheckout() {
     type = "text",
     colSpan = "col-span-2",
     textarea = false,
-  }) => (
+  }: FieldProps) => (
     <div className={colSpan}>
       <label className="block text-[10px] tracking-[0.18em] uppercase text-[#8a7d64] mb-2">
         {label}
@@ -183,6 +199,8 @@ export default function NtomawuraCheckout() {
       )}
     </div>
   );
+
+  // rest of JSX unchanged...
 
   // ── Success screen ────────────────────────────────────────────────────────
   if (completedOrder) {
