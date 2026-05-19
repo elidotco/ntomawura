@@ -37,7 +37,11 @@ export default function NtomawuraCheckout() {
   const [apiError, setApiError] = useState("");
 
   // Completed order data (set after API success)
-  const [completedOrder, setCompletedOrder] = useState(null);
+  const [completedOrder, setCompletedOrder] = useState<{
+    orderNumber: string;
+    total: number;
+    customerName: string;
+  } | null>(null);
 
   const { items: cartItems, clearCart } = useCart() || {};
 
@@ -520,7 +524,7 @@ export default function NtomawuraCheckout() {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function SectionLabel({ text }) {
+function SectionLabel({ text }: { text: string }) {
   return (
     <p className="flex items-center gap-3 text-[10px] tracking-[0.22em] uppercase text-[#8a7d64] mb-7">
       <span className="block w-6 h-px bg-[#8a7d64]" />
