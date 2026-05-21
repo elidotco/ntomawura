@@ -14,7 +14,7 @@ body {
   border-bottom: 1px solid #e8e2d8;
 }
 
-.ntomawura-header .inner {
+.inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -273,4 +273,17 @@ footer {
 .styles {
   background: url("/styles.jpg") no-repeat bottom;
   background-size: cover;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 8s linear infinite;
 }

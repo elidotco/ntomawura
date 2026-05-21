@@ -8,9 +8,11 @@ interface ProductCardData {
   comparePrice?: number;
   image: string;
   category?: string;
+  tailored: boolean;
 }
 
 const ProductCard = ({ data }: { data: ProductCardData }) => {
+  console.log(data);
   return (
     <div className="cursor-pointer group">
       <div className="overflow-hidden bg-[#f5f0ea] aspect-[12/16]">
@@ -30,11 +32,17 @@ const ProductCard = ({ data }: { data: ProductCardData }) => {
           )}
         </div>
         <div className="text-right">
-          <p className="text-sm">GH₵ {data.price.toFixed(2)}</p>
-          {data.comparePrice && (
-            <p className="text-xs text-gray-400 line-through">
-              GH₵ {data.comparePrice.toFixed(2)}
-            </p>
+          {data.tailored ? (
+            <p className="text-sm font-medium">On Request</p>
+          ) : (
+            <>
+              <p className="text-sm">GH₵ {data.price.toFixed(2)}</p>
+              {data.comparePrice && (
+                <p className="text-xs text-gray-400 line-through">
+                  GH₵ {data.comparePrice.toFixed(2)}
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>

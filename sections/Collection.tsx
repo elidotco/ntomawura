@@ -5,7 +5,7 @@ import React from "react";
 
 const Collection = async () => {
   const products = await getFeaturedProducts();
-  console.log(products);
+
   return (
     <section className="min-h-[50vh] lg:py-20 py-10 ">
       {/* headline */}
@@ -20,7 +20,7 @@ const Collection = async () => {
           </a>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
           {products.map((product: (typeof products)[number]) => (
             <a href={`/shop/${product.slug.current}`} key={product._id}>
               <ProductCard key={product._id} data={product} />

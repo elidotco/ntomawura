@@ -2,10 +2,19 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="min-h-[50vh] relative bottom-0">
+    <footer className=" min-h-[90vh] lg:min-h-[60vh] relative bottom-0">
       Footer
-      <div className="text-[15vw] text-[#faf8f5] z-10 absolute w-full  flex items-center justify-center">
-        Ntomawura
+      <div className="text-[15vw]  text-[#faf8f5] z-10 absolute w-full  flex items-center flex-col-reverse lg:flex-row justify-between overflow-hidden">
+        <img
+          src="/logoc.png"
+          alt="Stylized brand tag logo centered in a dark footer section"
+          className="xl:w-1/4 h-auto object-cover overflow o"
+        />
+        <img
+          src="/taggg.png"
+          alt="Stylized brand tag logo centered in a dark footer section"
+          className="xl:w-1/3 h-auto object-cover overflow o"
+        />
       </div>
       <div
         aria-hidden="true"

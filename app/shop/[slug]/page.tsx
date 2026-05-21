@@ -9,13 +9,13 @@ interface Props {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  console.log(slug);
+
   const product = await getProductBySlug(slug);
 
   if (!product) notFound();
 
   return (
-    <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 min-h-screen">
+    <main className="max-w-7xl py-40 mx-auto grid grid-cols-1 md:grid-cols-2 min-h-screen">
       <ProductImages images={product.images} name={product.name} />
       <ProductInfo product={product} />
     </main>

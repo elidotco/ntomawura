@@ -79,6 +79,14 @@ const product = {
       type: "boolean",
       initialValue: false,
     },
+
+    {
+      name: "tailored",
+      title: "Tailored Product",
+      description: "Show on tailored page",
+      type: "boolean",
+      initialValue: false,
+    },
     {
       name: "tags",
       title: "Tags",

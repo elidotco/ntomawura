@@ -1,7 +1,7 @@
 "use client";
 import { useCart } from "@/lib/context/CartContext";
 import Cart from "@/sections/Cart";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineX } from "react-icons/hi";
 import { HiOutlineBars3 } from "react-icons/hi2";
 
@@ -58,6 +58,13 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [cartCount] = React.useState(2);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const count = useCart()?.count || 0;
   const closeAll = () => {
     setIsMenuOpen(false);
@@ -85,10 +92,12 @@ const Header = () => {
 
   return (
     <>
-      <header className="ntomawura-header  fixed w-full">
+      <header
+        className={` z-50 fixed w-full ${scrolled ? "bg-[#faf8f5]" : "bg-transparent"}`}
+      >
         <div className="inner">
           {/* Logo */}
-          <a href="/" className="logo text-3xl">
+          <a href="/" className={`logo text-3xl `}>
             Ntomawura
           </a>
 
