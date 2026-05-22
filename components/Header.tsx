@@ -93,7 +93,7 @@ const Header = () => {
   return (
     <>
       <header
-        className={` z-50 fixed w-full ${scrolled ? "bg-[#faf8f5]" : "bg-transparent"}`}
+        className={` z-50 fixed w-full ${scrolled ? "bg-[#faf8f5] border border-b-[#e8e2d8]" : "bg-transparent "}`}
       >
         <div className="inner">
           {/* Logo */}

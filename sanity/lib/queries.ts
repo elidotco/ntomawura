@@ -27,7 +27,7 @@ export const getFeaturedProducts = async () => {
   return client.fetch(`
     *[_type == "product" && featured == true && inStock == true][0...8] {
       _id, name, slug, price, comparePrice,
-      "image": images[0].asset->url + "?w=800&h=1200&fit=crop&auto=format",
+      "image": images[0].asset->url + "?w=600&h=804&fit=crop&auto=format",
           }
   `);
 };
@@ -57,13 +57,13 @@ export const getProducts = async (page = 1, perPage = 12) => {
   const [products, total] = await Promise.all([
     client.fetch(
       `
-      *[_type == "product" && inStock == true] | order(_createdAt desc) [$start...$end] {
+      *[_type == "product" && inStock == true && tailored != true] | order(_createdAt desc) [$start...$end] {
         _id,
         name,
         "slug": slug.current,
         price,
         comparePrice,
-        "image": images[0].asset->url + "?w=800&h=1200&fit=crop&auto=format",
+        "image": images[0].asset->url + "?w=600&h=804&fit=crop&auto=format",
         
       }
     `,
@@ -90,7 +90,7 @@ export const getTailoredProducts = async (page = 1, perPage = 12) => {
         price,
         tailored,
         comparePrice,
-        "image": images[0].asset->url + "?w=800&h=1200&fit=crop&auto=format",
+        "image": images[0].asset->url + "?w=600&h=804&fit=crop&auto=format",
         
       }
     `,

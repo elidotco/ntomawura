@@ -12,7 +12,6 @@ interface ProductCardData {
 }
 
 const ProductCard = ({ data }: { data: ProductCardData }) => {
-  console.log(data);
   return (
     <div className="cursor-pointer group">
       <div className="overflow-hidden bg-[#f5f0ea] aspect-[12/16]">
