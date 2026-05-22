@@ -123,7 +123,9 @@ export default function ProductInfo({ product }: Props) {
       {/* Price */}
       <div className="flex items-baseline gap-3 mb-5">
         <span className="text-2xl font-medium">
-          GH₵ {product.price.toLocaleString()}
+          {product.tailored
+            ? "On Request"
+            : `GH₵ ${product.price.toLocaleString()}`}
         </span>
         {product.comparePrice && (
           <>
