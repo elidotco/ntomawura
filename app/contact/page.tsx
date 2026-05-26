@@ -101,10 +101,16 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#F5F2EC]">
       {/* Hero */}
-      <div className="min-h-[60vh] styles flex flex-col items-center justify-center w-full mb-20 gap-10 text-[#faf8f5]">
+      {/* <div className="min-h-[60vh] styles flex flex-col items-center justify-center w-full mb-20 gap-10 text-[#faf8f5]">
         <h1 className="text-6xl">Contact</h1>
         <p className="text-xl md:text-3xl">We Would Love To Hear From You</p>
-      </div>
+      </div> */}
+
+      <img
+        src="/contactheasd.png"
+        className="h-[60vh] w-full object-fit"
+        alt=""
+      />
 
       {/* Content grid */}
       <section className="max-w-6xl mx-auto px-6 lg:px-10 pb-24 grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-16">

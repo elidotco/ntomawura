@@ -15,13 +15,11 @@ export default async function ShopPage({ searchParams }: Props) {
 
   return (
     <>
-      <div className="min-h-[60vh] flex flex-col items-center justify-center shop w-full mb-20 gap-10 text-[#faf8f5]">
-        <h1 className="text-6xl">Shop</h1>
-        <p className="text-xl md:text-3xl">
-          Choose From Our Premium Collection
-        </p>
-      </div>
-
+      <img
+        src="/shop.png"
+        className="h-auto lg:h-[60vh] w-full object-fit"
+        alt=""
+      />
       <section className="max-w-7xl mx-auto px-6 pb-20">
         {products.length === 0 ? (
           <div className="flex items-center justify-center h-64">
