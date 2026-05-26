@@ -17,7 +17,7 @@ export default async function ShopPage({ searchParams }: Props) {
     <>
       <img
         src="/shop.png"
-        className="h-auto lg:h-[60vh] w-full object-fit"
+        className="h-auto lg:h-[60vh] w-full object-fit mb-20"
         alt=""
       />
       <section className="max-w-7xl mx-auto px-6 pb-20">

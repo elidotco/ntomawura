@@ -108,7 +108,7 @@ export default function ContactPage() {
 
       <img
         src="/contactheasd.png"
-        className="h-[60vh] w-full object-fit"
+        className=" h-auto lg:h-[60vh] w-full mb-20 object-fit"
         alt=""
       />
 
