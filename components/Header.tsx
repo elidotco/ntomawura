@@ -95,9 +95,12 @@ const Header = () => {
       <header
         className={` z-50 fixed w-full ${scrolled ? "bg-[#faf8f5] border border-b-[#e8e2d8]" : "bg-transparent "}`}
       >
-        <div className="inner">
+        <div className="inner ">
           {/* Logo */}
-          <a href="/" className={`logo text-3xl `}>
+          <a
+            href="/"
+            className={`logo text-3xl invisible lg:visible font-bold ${scrolled ? "visible" : "text-white"}`}
+          >
             Ntomawura
           </a>
 
