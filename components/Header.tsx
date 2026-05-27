@@ -73,6 +73,7 @@ const Header = () => {
   const overlayVisible = isMenuOpen || isCartOpen;
 
   const menuItems = [
+    { name: "Home", path: "/" },
     { name: "Shop", path: "/shop" },
     { name: "Styles", path: "/styles" },
     { name: "Tailored", path: "/tailored" },
