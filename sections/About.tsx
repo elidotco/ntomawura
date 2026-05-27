@@ -24,7 +24,7 @@ const styles = `
   }
 
   .nw-hero-left {
-    background: #5c1f0e;
+    background: #c65928;
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -386,13 +386,15 @@ export default function About() {
           <div className="nw-hero-left">
             <div className="nw-hero-left-content">
               <FadeIn delay={0}>
-                <p className="nw-eyebrow">Est. in Ghana, made for the world</p>
+                <p className=" text-[#5c1f0e]">
+                  Est. in Ghana, made for the world
+                </p>
               </FadeIn>
               <FadeIn delay={150}>
                 <h1 className="nw-hero-heading">
                   Dressed in
                   <br />
-                  <em>heritage,</em>
+                  <em className="text-[#5c1f0e]">heritage,</em>
                   <br />
                   worn with
                   <br />
@@ -406,9 +408,8 @@ export default function About() {
             <FadeIn delay={200}>
               <p className="nw-story-label">Our story</p>
               <p className="nw-story-text">
-                Ntomawura — <em>"the cloth has arrived"</em> — is a Ghanaian
-                fashion house rooted in the living tradition of Kente, Kaba, and
-                handwoven textiles.
+                Ntomawura — is a Ghanaian fashion house rooted in the living
+                tradition of Kente, Kaba, and handwoven textiles.
               </p>
               <p className="nw-story-body">
                 We believe that clothing is memory. Each piece we create carries
