@@ -260,12 +260,6 @@ body {
   background-size: cover;
 }
 
-footer {
-  background: url("/footer.webp") no-repeat center;
-  background-size: cover;
-  font-family: "Cormorant Garamond", serif;
-}
-
 .shop {
   background: url("/shop.jpg") no-repeat bottom;
   background-size: cover;
