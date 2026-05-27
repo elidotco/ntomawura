@@ -47,7 +47,7 @@ const Hero = () => {
       </div>
 
       {/* Prev button */}
-      <button
+      {/* <button
         onClick={prev}
         className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition"
       >
@@ -60,10 +60,10 @@ const Hero = () => {
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </button> */}
 
       {/* Next button */}
-      <button
+      {/* <button
         onClick={next}
         className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition"
       >
@@ -76,10 +76,10 @@ const Hero = () => {
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </button> */}
 
       {/* Dots */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
         {images.map((_, i) => (
           <button
             key={i}
@@ -91,16 +91,16 @@ const Hero = () => {
             }`}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white/10">
+      {/* <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white/10">
         <div
           key={current}
           className="h-full bg-white origin-left"
           style={{ animation: "progress 4s linear forwards" }}
         />
-      </div>
+      </div> */}
 
       <style>{`
         @keyframes progress {
