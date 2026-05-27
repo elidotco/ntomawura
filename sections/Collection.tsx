@@ -7,7 +7,7 @@ const Collection = async () => {
   const products = await getFeaturedProducts();
 
   return (
-    <section className="min-h-[50vh] lg:py-20 py-10 ">
+    <section className="min-h-[50vh] lg:py-20 py-10 " id="collection">
       {/* headline */}
       <div className=" mx-auto px-10  max-w-7xl">
         <div className=" flex w-full mb-20 justify-between items-center">
