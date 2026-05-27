@@ -24,7 +24,7 @@ const styles = `
   }
 
   .nw-hero-left {
-    background: #2c2b27;
+    background: #5c1f0e;
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -82,7 +82,7 @@ const styles = `
   }
 
   .nw-hero-right {
-    background: #eee9de;
+    background: #f4e3d2;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -90,7 +90,7 @@ const styles = `
   }
 
   .nw-story-label {
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #8a7d64;
@@ -118,7 +118,7 @@ const styles = `
   }
 
   .nw-story-body {
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.04em;
     line-height: 1.85;
     color: #5c5447;
