@@ -5,43 +5,81 @@ const images = ["/hero1.png", "/hero2.png"];
 
 const Hero = () => {
   const [current, setCurrent] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const goTo = (index: number) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrent(index);
-      setIsTransitioning(false);
-    }, 400);
+  const resetTimer = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 4000);
   };
 
-  const next = () => goTo((current + 1) % images.length);
-
   useEffect(() => {
-    intervalRef.current = setInterval(next, 4000);
+    resetTimer();
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [current]);
+  }, []);
+
+  const goTo = (index: number) => {
+    setCurrent(index);
+    resetTimer();
+  };
+
+  const prev = () => goTo((current - 1 + images.length) % images.length);
+  const next = () => goTo((current + 1) % images.length);
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Slides */}
+      {/* Track */}
       <div
-        className="relative w-full h-auto lg:h-[100vh] transition-opacity duration-500"
-        style={{ opacity: isTransitioning ? 0 : 1 }}
+        className="flex transition-transform duration-700 ease-in-out"
+        style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        <img
-          src={images[current]}
-          className="w-full h-auto lg:h-[100vh] object-cover"
-          alt={`Slide ${current + 1}`}
-        />
+        {images.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt={`Slide ${i + 1}`}
+            className="w-full flex-shrink-0 h-auto lg:h-[100vh] object-cover"
+          />
+        ))}
       </div>
 
-      {/* Dot indicators */}
-      {/* <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Prev button */}
+      <button
+        onClick={prev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path
+            d="M11 14L6 9l5-5"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+
+      {/* Next button */}
+      <button
+        onClick={next}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-sm transition"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path
+            d="M7 4l5 5-5 5"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
         {images.map((_, i) => (
           <button
             key={i}
@@ -53,7 +91,23 @@ const Hero = () => {
             }`}
           />
         ))}
-      </div> */}
+      </div>
+
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white/10">
+        <div
+          key={current}
+          className="h-full bg-white origin-left"
+          style={{ animation: "progress 4s linear forwards" }}
+        />
+      </div>
+
+      <style>{`
+        @keyframes progress {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+      `}</style>
     </section>
   );
 };
