@@ -12,13 +12,13 @@ const page = async ({ searchParams }: Props) => {
   const { products, pages } = await getTailoredProducts(page, 12);
   return (
     <>
-      <div className="min-h-[60vh] flex flex-col items-center justify-center styles w-full mb-20 gap-10 text-[#faf8f5]">
-        {" "}
-        <h1 className="text-6xl">Tailored</h1>
-        <p className="text-xl md:text-3xl">Premium Prints Made To Fit</p>
-      </div>
+      <img
+        src="/tailored.png"
+        className="h-auto lg:h-[100vh] w-full object-fit"
+        alt=""
+      />
       {/* Store */}
-      <section className="max-w-7xl mx-auto px-6 pb-20">
+      <section className="max-w-7xl mx-auto mt-20 px-6 pb-20">
         {products.length === 0 ? (
           <div className="flex items-center justify-center h-64">
             <p className="text-gray-400 tracking-widest text-sm">

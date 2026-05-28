@@ -4,7 +4,7 @@ const page = () => {
   return (
     <>
       <img
-        src="/hero2plain.png"
+        src="/style.png"
         className="h-auto lg:h-[100vh] w-full object-fit"
         alt=""
       />
