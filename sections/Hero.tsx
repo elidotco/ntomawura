@@ -47,7 +47,7 @@ const Hero = () => {
       </div>
       <a
         href="/#collection"
-        className="absolute bottom-20 left-1/5 -translate-x-1/2 bg-[#5c1f0e] text-white px-6 py-3 rounded-full"
+        className="absolute hidden lg:flex bottom-20 left-1/5 -translate-x-1/2 bg-[#5c1f0e] text-white px-6 py-3 rounded-full"
       >
         Shop now
       </a>

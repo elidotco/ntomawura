@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <footer className=" relative  ">
-      <div className="absolute bottom-0 w-full flex items-center justify-center py-6">
+      <div className="absolute bottom-0 w-full flex items-center justify-center py-3 lg:py-6">
         <p className="text-sm tracking-widest text-[#faf8f5] font-light">
           © {new Date().getFullYear()} Ntomawura. All rights reserved.
         </p>
