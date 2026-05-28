@@ -4,7 +4,7 @@ const page = () => {
   return (
     <>
       <img
-        src="/style.png"
+        src="/tailored.png"
         className="h-auto lg:h-[100vh] w-full object-fit"
         alt=""
       />

@@ -13,7 +13,7 @@ const page = async ({ searchParams }: Props) => {
   return (
     <>
       <img
-        src="/tailored.png"
+        src="/style.png"
         className="h-auto lg:h-[100vh] w-full object-fit"
         alt=""
       />
