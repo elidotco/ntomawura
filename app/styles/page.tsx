@@ -5,7 +5,7 @@ const page = () => {
     <>
       <img
         src="/tailored.png"
-        className="h-auto lg:h-[100vh] w-full object-fit"
+        className="h-auto lg:h-[100vh] ok w-full object-fit"
         alt=""
       />
       {/* Store */}
