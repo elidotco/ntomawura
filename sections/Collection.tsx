@@ -1,10 +1,13 @@
 import ProductCard from "@/components/ProductCard";
-import { getAllProducts, getFeaturedProducts } from "@/sanity/lib/queries";
-
-import React from "react";
+import {
+  // getAllProducts,
+  // getFeaturedProducts,
+  getProducts,
+} from "@/sanity/lib/queries";
 
 const Collection = async () => {
-  const products = await getFeaturedProducts();
+  const products = await getProducts();
+  console.log(products);
 
   return (
     <section
@@ -24,8 +27,8 @@ const Collection = async () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-          {products.map((product: (typeof products)[number]) => (
-            <a href={`/shop/${product.slug.current}`} key={product._id}>
+          {products.products.map((product: (typeof products)[number]) => (
+            <a href={`/shop/${product.slug}`} key={product._id}>
               <ProductCard key={product._id} data={product} />
             </a>
           ))}

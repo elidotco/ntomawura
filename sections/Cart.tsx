@@ -16,6 +16,7 @@ const Cart = ({ isCartOpen, setIsCartOpen }: CartProps) => {
     setIsCartOpen(false);
   };
   const updateQty = useCart().updateQuantity;
+  console.log(cartItems);
   return (
     <aside
       aria-label="Shopping cart"
@@ -86,7 +87,7 @@ const Cart = ({ isCartOpen, setIsCartOpen }: CartProps) => {
                 {/* Placeholder swatch */}
                 <div className="w-20 h-24 bg-stone-200 rounded shrink-0 overflow-hidden">
                   <img
-                    src={`${item.image}?w=80&h=100&fit=crop`}
+                    src={`${item.image}`}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />

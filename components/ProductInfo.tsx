@@ -140,21 +140,23 @@ export default function ProductInfo({ product }: Props) {
       </div>
 
       {/* Stock */}
-      <div className="flex items-center gap-2 mb-6">
-        {product.inStock ? (
-          <>
-            <div className="w-2 h-2 rounded-full bg-green-600" />
-            <span className="text-xs text-green-700">
-              In stock — {product.stock} available
-            </span>
-          </>
-        ) : (
-          <>
-            <div className="w-2 h-2 rounded-full bg-red-500" />
-            <span className="text-xs text-red-600">Out of stock</span>
-          </>
-        )}
-      </div>
+      {!product.tailored && (
+        <div className="flex items-center gap-2 mb-6">
+          {product.inStock ? (
+            <>
+              <div className="w-2 h-2 rounded-full bg-green-600" />
+              <span className="text-xs text-green-700">
+                In stock — {product.stock} available
+              </span>
+            </>
+          ) : (
+            <>
+              <div className="w-2 h-2 rounded-full bg-red-500" />
+              <span className="text-xs text-red-600">Out of stock</span>
+            </>
+          )}
+        </div>
+      )}
 
       <div className="h-px bg-gray-100 mb-6" />
 
@@ -363,7 +365,7 @@ export default function ProductInfo({ product }: Props) {
                 : "OUT OF STOCK"}
           </button>
 
-          <a
+          {/* <a
             href="/checkout"
             className={`w-full py-4 text-sm tracking-widest border border-gray-200 text-center rounded transition-colors mb-8 block ${
               product.inStock
@@ -372,7 +374,7 @@ export default function ProductInfo({ product }: Props) {
             }`}
           >
             BUY NOW
-          </a>
+          </a> */}
         </>
       )}
 

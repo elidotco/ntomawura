@@ -216,7 +216,7 @@ export async function POST(req: NextRequest) {
           </div>
           <div style="background:#f0ede6;padding:16px 24px;text-align:center;border-radius:0 0 8px 8px;border:1px solid #e2e8f0;border-top:none;">
             <p style="margin:0 0 6px;font-size:11px;color:#8a7d64;">Need urgent help? Reach us on WhatsApp</p>
-            <a href="https://wa.me/233202918388" style="font-size:11px;color:#25D366;text-decoration:none;font-weight:500;">+233 20 291 8388</a>
+            <a href="https://wa.me/233556127550" style="font-size:11px;color:#25D366;text-decoration:none;font-weight:500;">+233 55 612 7550</a>
           </div>
         </div>
       `,

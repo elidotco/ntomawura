@@ -25,7 +25,7 @@ type CompletedOrder = {
   customerName: string;
 };
 
-const WHATSAPP_NUMBER = "233202918388";
+const WHATSAPP_NUMBER = "233556127550";
 
 function buildTrackingMessage({
   orderNumber,
@@ -300,7 +300,7 @@ export default function NtomawuraCheckout() {
   // ── Main checkout ─────────────────────────────────────────────────────────
   return (
     <div
-      className="min-h-screen bg-[#F5F2EC]"
+      className="min-h-screen pt-20 bg-[#F5F2EC]"
       style={{ fontFamily: "'Jost', sans-serif", fontWeight: 300 }}
     >
       <style>{styles}</style>
@@ -314,30 +314,30 @@ export default function NtomawuraCheckout() {
           {/* Contact */}
           <SectionLabel text="Contact information" />
           <div className="grid grid-cols-2 gap-x-6 gap-y-7 mb-10">
-            <Field
-              label="First name"
-              k="firstName"
-              placeholder="Ama"
-              colSpan="col-span-1"
-            />
-            <Field
-              label="Last name"
-              k="lastName"
-              placeholder="Mensah"
-              colSpan="col-span-1"
-            />
-            <Field
-              label="Phone (WhatsApp)"
-              k="phone"
-              placeholder="+233 24 000 0000"
-              type="tel"
-            />
-            <Field
-              label="Email (optional)"
-              k="email"
-              placeholder="ama@example.com"
-              type="email"
-            />
+            {Field({
+              label: "First name",
+              k: "firstName",
+              placeholder: "Ama",
+              colSpan: "col-span-1",
+            })}
+            {Field({
+              label: "Last name",
+              k: "lastName",
+              placeholder: "Mensah",
+              colSpan: "col-span-1",
+            })}
+            {Field({
+              label: "Phone (WhatsApp)",
+              k: "phone",
+              placeholder: "+233 24 000 0000",
+              type: "tel",
+            })}
+            {Field({
+              label: "Email (optional)",
+              k: "email",
+              placeholder: "ama@example.com",
+              type: "email",
+            })}
           </div>
 
           <hr className="border-[#d4cdc0] mb-10" />
@@ -345,29 +345,29 @@ export default function NtomawuraCheckout() {
           {/* Delivery */}
           <SectionLabel text="Delivery address" />
           <div className="grid grid-cols-2 gap-x-6 gap-y-7 mb-10">
-            <Field
-              label="Street address"
-              k="address"
-              placeholder="14 Cantonments Road"
-            />
-            <Field
-              label="City / Town"
-              k="city"
-              placeholder="Accra"
-              colSpan="col-span-1"
-            />
-            <Field
-              label="Region"
-              k="region"
-              placeholder="Greater Accra"
-              colSpan="col-span-1"
-            />
-            <Field
-              label="Delivery notes (optional)"
-              k="deliveryNotes"
-              placeholder="e.g. Call before arriving · Leave with security"
-              textarea
-            />
+            {Field({
+              label: "Street address",
+              k: "address",
+              placeholder: "14 Cantonments Road",
+            })}
+            {Field({
+              label: "City / Town",
+              k: "city",
+              placeholder: "Accra",
+              colSpan: "col-span-1",
+            })}
+            {Field({
+              label: "Region",
+              k: "region",
+              placeholder: "Greater Accra",
+              colSpan: "col-span-1",
+            })}
+            {Field({
+              label: "Delivery notes (optional)",
+              k: "deliveryNotes",
+              placeholder: "e.g. Call before arriving · Leave with security",
+              textarea: true,
+            })}
           </div>
 
           <hr className="border-[#d4cdc0] mb-10" />
@@ -444,7 +444,7 @@ export default function NtomawuraCheckout() {
               >
                 {item.image && (
                   <img
-                    src={`${item.image}?w=80&h=100&fit=crop`}
+                    src={`${item.image}`}
                     alt={item.name}
                     className="w-20 h-24 object-cover rounded shrink-0"
                   />

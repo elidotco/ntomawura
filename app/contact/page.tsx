@@ -150,9 +150,15 @@ export default function ContactPage() {
           </p>
           <div className="flex gap-5">
             {[
-              { label: "Instagram", href: "#" },
-              { label: "Facebook", href: "#" },
-              { label: "TikTok", href: "#" },
+              {
+                label: "Instagram",
+                href: `https://www.instagram.com/ntomawura_ghana/`,
+              },
+              {
+                label: "Facebook",
+                href: `https://web.facebook.com/ntomawuraghana/`,
+              },
+              { label: "TikTok", href: `https://www.tiktok.com/@ntomawura` },
             ].map(({ label, href }) => (
               <a
                 key={label}
