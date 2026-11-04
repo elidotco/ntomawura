@@ -27,11 +27,13 @@ const Collection = async () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-          {products.products.map((product: (typeof products)[number]) => (
-            <a href={`/shop/${product.slug}`} key={product._id}>
-              <ProductCard key={product._id} data={product} />
-            </a>
-          ))}
+          {products.products.map(
+            (product: (typeof products.products)[number]) => (
+              <a href={`/shop/${product.slug}`} key={product._id}>
+                <ProductCard key={product._id} data={product} />
+              </a>
+            ),
+          )}
         </div>
       </div>
     </section>
