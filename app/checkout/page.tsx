@@ -3,6 +3,7 @@
 import { useCart } from "@/lib/context/CartContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import PaymentMethodPicker from "@/components/PaymentMethodPicker";
 
 const styles = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Jost:wght@300;400;500&display=swap');`;
 
@@ -105,37 +106,45 @@ export default function NtomawuraCheckout() {
     if (!validate()) return;
     setLoading(true);
     setApiError("");
+    let redirecting = false;
+
+    // Read the choice straight from the radio inputs (no state, no re-render)
+    const paymentMethod = (document.querySelector<HTMLInputElement>(
+      'input[name="paymentMethod"]:checked',
+    )?.value ?? "delivery") as "delivery" | "instant";
 
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          paymentMethod,
           customerName: `${form.firstName} ${form.lastName}`.trim(),
           customerEmail: form.email || `${form.phone}@noemail.com`,
           customerPhone: form.phone,
           deliveryAddress: `${form.address}, ${form.city}, ${form.region}`,
           deliveryNotes: form.deliveryNotes || undefined,
-          deliveryFee: 0,
-          items: cart.map((i) => ({
-            id: i._id,
-            name: i.name,
-            price: i.price,
-            quantity: i.quantity,
-            image: i.image,
-          })),
+          // IDs and quantities only. The server looks up names and prices.
+          items: cart.map((i) => ({ id: i._id, quantity: i.quantity })),
         }),
       });
 
       const data = await res.json();
-
       if (!res.ok || !data.success) {
         throw new Error(
           data.error || "Something went wrong. Please try again.",
         );
       }
-      clearCart?.();
 
+      if (paymentMethod === "instant") {
+        if (!data.authorizationUrl) throw new Error("Could not start payment.");
+        redirecting = true;
+        // Don't clear the cart yet. If they abandon payment, they keep it.
+        window.location.href = data.authorizationUrl;
+        return;
+      }
+
+      clearCart?.();
       setCompletedOrder({
         orderNumber: data.orderNumber,
         total: data.total,
@@ -146,7 +155,7 @@ export default function NtomawuraCheckout() {
         err instanceof Error ? err.message : "An unexpected error occurred.",
       );
     } finally {
-      setLoading(false);
+      if (!redirecting) setLoading(false); // keep the spinner during redirect
     }
   };
 
@@ -308,7 +317,7 @@ export default function NtomawuraCheckout() {
       {/* Nav */}
 
       {/* Body */}
-      <div className="grid grid-cols-1 font-medium text-gray-950 lg:grid-cols-[1fr_680px] min-h-[calc(100vh-57px)]">
+      <div className="group grid grid-cols-1 font-medium text-gray-950 lg:grid-cols-[1fr_680px] min-h-[calc(100vh-57px)]">
         {/* ── Left: Form ── */}
         <div className="px-6 lg:px-14 py-10 border-r border-[#d4cdc0]">
           {/* Contact */}
@@ -374,20 +383,7 @@ export default function NtomawuraCheckout() {
 
           {/* Payment */}
           <SectionLabel text="Payment method" />
-          <div className="flex items-start gap-4 border border-[#b5a98a] bg-[#eee9de] p-4 mb-10">
-            <div className="w-4 h-4 rounded-full border border-[#8a7d64] flex items-center justify-center mt-0.5 flex-shrink-0">
-              <div className="w-2 h-2 rounded-full bg-[#8a7d64]" />
-            </div>
-            <div>
-              <p className="text-[13px] tracking-wide text-[#2c2b27] mb-1">
-                Cash on Delivery
-              </p>
-              <p className="text-[11px] text-[#8a7d64] leading-relaxed">
-                Pay when your fabrics arrive. No card or mobile money needed
-                upfront.
-              </p>
-            </div>
-          </div>
+          <PaymentMethodPicker />
 
           {/* API error */}
           {apiError && (
@@ -411,7 +407,7 @@ export default function NtomawuraCheckout() {
               </>
             ) : (
               <>
-                Place Order
+                <ByMethod delivery="Place Order" instant="Pay Now" />
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path
                     d="M2 7h10M8 3l4 4-4 4"
@@ -490,7 +486,7 @@ export default function NtomawuraCheckout() {
                 className="text-[#8a7d64] italic"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
-                On delivery
+                <ByMethod delivery="On delivery" instant="Pay now" />
               </span>
             </div>
           </div>
@@ -591,5 +587,23 @@ function Spinner() {
         strokeLinecap="round"
       />
     </svg>
+  );
+}
+function ByMethod({
+  delivery,
+  instant,
+}: {
+  delivery: React.ReactNode;
+  instant: React.ReactNode;
+}) {
+  return (
+    <>
+      <span className="group-has-[input[value=instant]:checked]:hidden">
+        {delivery}
+      </span>
+      <span className="hidden group-has-[input[value=instant]:checked]:inline">
+        {instant}
+      </span>
+    </>
   );
 }
