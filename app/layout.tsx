@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={` ${poppins.className} h-full antialiased`}>
       <head>
-        <!-- Meta Pixel Code -->
+       
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -48,7 +48,7 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=938412448801883&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code --></head>
+</head>
       <body className="min-h-full flex flex-col">
         <CartProvider>
           <Header />
