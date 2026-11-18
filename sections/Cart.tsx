@@ -16,7 +16,7 @@ const Cart = ({ isCartOpen, setIsCartOpen }: CartProps) => {
     setIsCartOpen(false);
   };
   const updateQty = useCart().updateQuantity;
-  console.log(cartItems);
+
   return (
     <aside
       aria-label="Shopping cart"
