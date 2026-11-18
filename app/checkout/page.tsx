@@ -1,9 +1,10 @@
 "use client";
 
 import { useCart } from "@/lib/context/CartContext";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PaymentMethodPicker from "@/components/PaymentMethodPicker";
+import { track } from "@/lib/fbpixel";
 
 const styles = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Jost:wght@300;400;500&display=swap');`;
 
@@ -27,6 +28,15 @@ type CompletedOrder = {
 };
 
 const WHATSAPP_NUMBER = "233556127550";
+
+// Reads a browser cookie (used for Meta's _fbp / _fbc identifiers)
+const getCookie = (name: string) =>
+  typeof document === "undefined"
+    ? undefined
+    : document.cookie
+        .split("; ")
+        .find((r) => r.startsWith(name + "="))
+        ?.split("=")[1];
 
 function buildTrackingMessage({
   orderNumber,
@@ -74,6 +84,20 @@ export default function NtomawuraCheckout() {
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const total = subtotal;
+
+  // ── Meta Pixel: InitiateCheckout (fires once per visit) ───────────────────
+  const checkoutTracked = useRef(false);
+  useEffect(() => {
+    if (checkoutTracked.current || cart.length === 0 || completedOrder) return;
+    checkoutTracked.current = true;
+    track("InitiateCheckout", {
+      content_ids: cart.map((i) => i._id),
+      content_type: "product",
+      num_items: cart.reduce((s, i) => s + i.quantity, 0),
+      value: subtotal,
+      currency: "GHS",
+    });
+  }, [cart, completedOrder, subtotal]);
 
   const update = <K extends keyof FormValues>(k: K, v: FormValues[K]) => {
     setForm((f) => ({ ...f, [k]: v }));
@@ -126,6 +150,12 @@ export default function NtomawuraCheckout() {
           deliveryNotes: form.deliveryNotes || undefined,
           // IDs and quantities only. The server looks up names and prices.
           items: cart.map((i) => ({ id: i._id, quantity: i.quantity })),
+          // Meta tracking identifiers, used by the server-side Purchase event
+          tracking: {
+            fbp: getCookie("_fbp"),
+            fbc: getCookie("_fbc"),
+            sourceUrl: window.location.href,
+          },
         }),
       });
 
@@ -140,9 +170,26 @@ export default function NtomawuraCheckout() {
         if (!data.authorizationUrl) throw new Error("Could not start payment.");
         redirecting = true;
         // Don't clear the cart yet. If they abandon payment, they keep it.
+        // Purchase is NOT fired here. It fires on the payment return page
+        // and in the payment webhook, once payment is confirmed.
         window.location.href = data.authorizationUrl;
         return;
       }
+
+      // ── Meta Pixel: Purchase (pay on delivery) ──────────────────────────
+      // eventID must match the server-side event_id so Meta counts it once.
+      track(
+        "Purchase",
+        {
+          value: data.total,
+          currency: "GHS",
+          content_ids: cart.map((i) => i._id),
+          content_type: "product",
+          num_items: cart.reduce((s, i) => s + i.quantity, 0),
+          payment_method: "delivery",
+        },
+        `purchase_${data.orderNumber}`,
+      );
 
       clearCart?.();
       setCompletedOrder({
@@ -209,12 +256,8 @@ export default function NtomawuraCheckout() {
     </div>
   );
 
-  // rest of JSX unchanged...
-
   // ── Success screen ────────────────────────────────────────────────────────
   if (completedOrder) {
-    // clear cart after successful order
-
     return (
       <div className="min-h-screen bg-[#F5F2EC] flex flex-col items-center justify-center px-6 text-center">
         <style>{styles}</style>
@@ -313,8 +356,6 @@ export default function NtomawuraCheckout() {
       style={{ fontFamily: "'Jost', sans-serif", fontWeight: 300 }}
     >
       <style>{styles}</style>
-
-      {/* Nav */}
 
       {/* Body */}
       <div className="group grid grid-cols-1 font-medium text-gray-950 lg:grid-cols-[1fr_680px] min-h-[calc(100vh-57px)]">

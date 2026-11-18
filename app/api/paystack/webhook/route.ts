@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { runPostOrderTasks } from "@/lib/order-tasks";
+import { sendMetaPurchase } from "@/lib/metaCapi";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,7 +51,46 @@ export async function POST(req: NextRequest) {
     .eq("payment_status", "unpaid")
     .select("*");
 
-  if (updated?.length) await runPostOrderTasks(updated[0]);
+  if (updated?.length) {
+    const paidOrder = updated[0];
+
+    // Meta Purchase (Conversions API). Sent first and wrapped so that a failure
+    // in runPostOrderTasks can't stop it, and a Meta failure can't stop the order.
+    // `tracking` was saved on the order when it was created (see orders route).
+    try {
+      const t = (paidOrder.tracking ?? {}) as {
+        fbp?: string;
+        fbc?: string;
+        sourceUrl?: string;
+        ip?: string;
+        userAgent?: string;
+      };
+
+      // Adjust to however your order items are stored
+      const productIds: string[] = Array.isArray(paidOrder.items)
+        ? paidOrder.items
+            .map((i: any) => String(i.product_id ?? i.id ?? i._id ?? ""))
+            .filter(Boolean)
+        : [];
+
+      await sendMetaPurchase({
+        orderNumber: paidOrder.order_number,
+        total: Number(paidOrder.total),
+        productIds,
+        email: paidOrder.customer_email,
+        phone: paidOrder.customer_phone,
+        ip: t.ip,
+        userAgent: t.userAgent,
+        fbp: t.fbp,
+        fbc: t.fbc,
+        sourceUrl: t.sourceUrl,
+      });
+    } catch (e) {
+      console.error("Webhook: Meta tracking failed", e);
+    }
+
+    await runPostOrderTasks(paidOrder);
+  }
 
   return NextResponse.json({ ok: true });
 }

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createSanityClient } from "@sanity/client";
 import { runPostOrderTasks } from "@/lib/order-tasks";
+import { sendMetaPurchase } from "@/lib/metaCapi";
 
 // ─── Clients ──────────────────────────────────────────────────────────────────
 
@@ -23,6 +24,16 @@ const sanity = createSanityClient({
 
 type CartLine = { id: string; quantity: number };
 
+// Meta tracking details captured at checkout, stored on the order so the
+// Paystack webhook can report the sale later with the customer's own details.
+type Tracking = {
+  fbp?: string;
+  fbc?: string;
+  sourceUrl?: string;
+  ip?: string;
+  userAgent?: string;
+};
+
 interface OrderPayload {
   paymentMethod?: "delivery" | "instant";
   customerName: string;
@@ -31,6 +42,7 @@ interface OrderPayload {
   deliveryAddress: string;
   deliveryNotes?: string;
   items: CartLine[]; // ids and quantities only, the server decides names and prices
+  tracking?: { fbp?: string; fbc?: string; sourceUrl?: string };
 }
 
 type PricedLine = {
@@ -41,12 +53,13 @@ type PricedLine = {
   image?: string;
 };
 
-type SaveInput = Omit<OrderPayload, "items" | "paymentMethod"> & {
+type SaveInput = Omit<OrderPayload, "items" | "paymentMethod" | "tracking"> & {
   paymentMethod: "delivery" | "instant";
   subtotal: number;
   deliveryFee: number;
   total: number;
   lines: PricedLine[];
+  tracking: Tracking;
 };
 
 // ─── Pricing: always from Sanity, never from the browser ─────────────────────
@@ -122,6 +135,7 @@ async function saveToSupabase(input: SaveInput) {
       payment_method: input.paymentMethod,
       order_status: "pending",
       payment_status: "unpaid",
+      tracking: input.tracking, // needs: alter table orders add column tracking jsonb;
     })
     .select()
     .single();
@@ -133,6 +147,11 @@ async function saveToSupabase(input: SaveInput) {
 // ─── Main POST handler ────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const envUrl = process.env.SITE_URL;
+  const siteUrl = (
+    envUrl && /^https?:\/\//.test(envUrl) ? envUrl : req.nextUrl.origin
+  ).replace(/\/+$/, "");
+
   try {
     const body: OrderPayload = await req.json();
 
@@ -187,6 +206,16 @@ export async function POST(req: NextRequest) {
     const deliveryFee = 0; // decided on the server, ignore anything the client sends
     const total = subtotal + deliveryFee;
 
+    // Meta tracking details. fbp/fbc/sourceUrl come from the browser, the IP and
+    // user agent are read here from the customer's own request.
+    const tracking: Tracking = {
+      fbp: body.tracking?.fbp,
+      fbc: body.tracking?.fbc,
+      sourceUrl: body.tracking?.sourceUrl,
+      ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim(),
+      userAgent: req.headers.get("user-agent") ?? undefined,
+    };
+
     // 1. Save to Supabase (must succeed)
     console.log("💾 Saving order to Supabase...");
     const order = await saveToSupabase({
@@ -196,12 +225,16 @@ export async function POST(req: NextRequest) {
       deliveryFee,
       total,
       lines: pricing.lines,
+      tracking,
     });
     console.log(`✅ Order saved: ${order.order_number}`);
 
     // 2a. Instant payment: start Paystack.
-    //     Notion, stock and emails wait for the webhook (payment confirmed).
+    //     Notion, stock, emails and the Meta Purchase event wait for the webhook
+    //     (payment confirmed).
     if (paymentMethod === "instant") {
+      const callbackUrl = `${siteUrl}/order/${order.order_number}/confirmed`;
+      console.log("Paystack callback_url:", callbackUrl);
       const res = await fetch(
         "https://api.paystack.co/transaction/initialize",
         {
@@ -215,7 +248,7 @@ export async function POST(req: NextRequest) {
             amount: Math.round(total * 100), // pesewas
             currency: "GHS",
             reference: order.order_number,
-            callback_url: `${process.env.SITE_URL}/order/${order.order_number}/confirmed`,
+            callback_url: callbackUrl,
             metadata: { orderId: order.id, orderNumber: order.order_number },
           }),
         },
@@ -243,8 +276,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 2b. Pay on delivery: run Notion, stock and emails now.
-    //     Awaited on purpose, serverless hosts can kill un-awaited work.
+    // 2b. Pay on delivery: report the sale to Meta, then run Notion, stock and
+    //     emails. Both awaited on purpose, serverless hosts can kill un-awaited
+    //     work. sendMetaPurchase never throws, so it can't block the order, and
+    //     it runs first so a failure in runPostOrderTasks can't lose the event.
+    await sendMetaPurchase({
+      orderNumber: order.order_number,
+      total: Number(order.total),
+      productIds: pricing.lines.map((l) => l.product_id),
+      email: order.customer_email,
+      phone: order.customer_phone,
+      ...tracking,
+    });
+
     await runPostOrderTasks(order);
 
     return NextResponse.json({
