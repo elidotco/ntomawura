@@ -5,12 +5,12 @@ const PAYMENT_OPTIONS: {
   title: string;
   description: string;
 }[] = [
-  {
-    value: "instant",
-    title: "Instant Payment",
-    description:
-      "Pay now with card or mobile money. Your order is confirmed immediately.",
-  },
+  // {
+  //   value: "instant",
+  //   title: "Instant Payment",
+  //   description:
+  //     "Pay now with card or mobile money. Your order is confirmed immediately.",
+  // },
   {
     value: "delivery",
     title: "Payment on Delivery",
@@ -32,7 +32,7 @@ export default function PaymentMethodPicker() {
             type="radio"
             name="paymentMethod"
             value={option.value}
-            defaultChecked={option.value === "instant"}
+            defaultChecked={option.value === "delivery"}
             className="peer sr-only"
           />
           <span className="mt-0.5 flex h-4.5 w-4.5 px-auto items-center justify-center rounded-full border border-[#8a7d64] peer-checked:[&>span]:opacity-100">
